@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>🕊️ Children of Gaza — The Record</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+:root{
+  --white:#fefefe;
+  --off:#f8f4ef;
+  --paper:#f2ece3;
+  --ink:#0d0d0d;
+  --ink2:#1a1a1a;
+  --grey:#4a4a4a;
+  --lgrey:#c8c0b5;
+  --blood:#8b0000;
+  --blood2:#a50000;
+  --bloodlight:#c0392b;
+  --splatter:#d32f2f;
+  --rust:#b71c1c;
+  --drip:#7f0000;
+  --gold:#8b6914;
+  --goldlight:#c9a227;
+}
+
+body{
+  background:var(--white);
+  color:var(--ink);
+  font-family:'Crimson Pro',serif;
+  overflow-x:hidden;
+  cursor:default;
+  position:relative;
+}
+
+/* ══ GRAIN OVERLAY ══ */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.6;
+  mix-blend-mode:multiply;
+}
+
+/* ══ SCROLLBAR ══ */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--off)}
+::-webkit-scrollbar-thumb{background:var(--blood);border-radius:0}
+
+/* ══ BLOOD CANVAS ══ */
+#bloodCanvas{
+  position:fixed;inset:0;
+  pointer-events:none;z-index:1;
+  opacity:.85;
+}
+
+/* ══ CONTENT LAYER ══ */
+.content{position:relative;z-index:2}
+
+/* ══ TICKER ══ */
+.ticker{
+  background:var(--blood);
+  padding:.55rem 0;
+  overflow:hidden;
+  position:relative;z-index:10;
+}
+.ticker-inner{
+  display:flex;gap:4rem;white-space:nowrap;
+  animation:tickRun 25s linear infinite;
+  width:max-content;
+}
+@keyframes tickRun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick-item{
+  display:inline-flex;align-items:center;gap:.75rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;letter-spacing:.1em;color:rgba(255,255,255,.7);
+}
+.tick-item strong{color:#fff;font-weight:700}
+.tick-sep{color:rgba(255,255,255,.3);font-size:.8rem}
+
+/* ══ HERO ══ */
+.hero{
+  min-height:100vh;
+  background:var(--white);
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start;
+  padding:6rem 6rem 4rem;
+  position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:3px;
+  background:linear-gradient(90deg,var(--blood),var(--bloodlight),transparent);
+}
+
+.hero-date{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--blood);
+  margin-bottom:1.5rem;
+  opacity:0;animation:riseIn .7s .1s forwards;
+  display:flex;align-items:center;gap:1rem;
+}
+.hero-date::before{
+  content:'';display:block;width:30px;height:1px;background:var(--blood);
+}
+
+.hero-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--lgrey);margin-bottom:.75rem;
+  opacity:0;animation:riseIn .7s .2s forwards;
+}
+
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,11vw,9rem);
+  line-height:.92;
+  letter-spacing:.02em;
+  color:var(--ink);
+  margin-bottom:1rem;
+  opacity:0;animation:riseIn .8s .3s forwards;
+  position:relative;
+}
+.hero-title .blood-word{
+  color:var(--blood);
+  position:relative;
+  display:inline-block;
+}
+.hero-title .blood-word::after{
+  content:'';
+  position:absolute;
+  bottom:-.1em;left:0;right:0;
+  height:.06em;
+  background:var(--blood);
+  transform:scaleX(0);
+  transform-origin:left;
+  animation:lineIn 1s 1.2s forwards;
+}
+@keyframes lineIn{to{transform:scaleX(1)}}
+
+.hero-sub{
+  font-size:1.15rem;
+  font-style:italic;color:var(--grey);
+  max-width:550px;line-height:1.7;
+  margin-bottom:2.5rem;
+  opacity:0;animation:riseIn .8s .5s forwards;
+}
+
+.hero-nums{
+  display:flex;gap:0;
+  border:1px solid var(--lgrey);
+  opacity:0;animation:riseIn .8s .7s forwards;
+  overflow:hidden;
+}
+.hero-num{
+  padding:1.5rem 2rem;
+  border-right:1px solid var(--lgrey);
+  text-align:center;
+  background:var(--white);
+  transition:background .2s;
+}
+.hero-num:last-child{border-right:none}
+.hero-num:hover{background:var(--off)}
+.hn-val{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.2rem;line-height:1;
+  color:var(--blood);
+  letter-spacing:.05em;
+}
+.hn-lbl{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--lgrey);margin-top:.35rem;
+}
+
+.hero-scroll{
+  position:absolute;bottom:2.5rem;right:5rem;
+  display:flex;align-items:center;gap:.75rem;
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--lgrey);
+  opacity:0;animation:riseIn 1s 1.5s forwards;
+  writing-mode:vertical-rl;
+}
+.hero-scroll::after{
+  content:'';display:block;width:1px;height:50px;
+  background:linear-gradient(to bottom,var(--blood),transparent);
+}
+
+@keyframes riseIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ══ DIVIDER ══ */
+.hr{
+  border:none;border-top:1px solid var(--lgrey);margin:0;
+}
+.hr-blood{
+  border:none;border-top:2px solid var(--blood);margin:0;
+  position:relative;
+}
+.hr-blood::after{
+  content:'';position:absolute;top:-1px;left:0;
+  width:80px;height:3px;background:var(--blood);
+  box-shadow:0 2px 12px rgba(139,0,0,.4);
+}
+
+/* ══ SECTION LAYOUT ══ */
+.section{padding:5rem 6rem}
+.section-alt{background:var(--off)}
+
+.s-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--blood);margin-bottom:.6rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.s-eyebrow::before{content:'▌';font-size:.7rem}
+
+.s-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  line-height:.95;letter-spacing:.02em;
+  color:var(--ink);margin-bottom:1rem;
+}
+.s-title em{color:var(--blood);font-style:normal}
+
+.s-desc{
+  font-size:1rem;font-style:italic;
+  color:var(--grey);max-width:600px;line-height:1.7;
+  margin-bottom:3rem;
+}
+
+/* ══ STAT WALL — NEWSPAPER GRID ══ */
+.statwall{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  border:1px solid var(--ink);
+  overflow:hidden;
+  margin-bottom:4rem;
+}
+.sw{
+  padding:2rem 1.5rem;
+  border-right:1px solid rgba(0,0,0,.1);
+  position:relative;overflow:hidden;
+  transition:background .25s;
+}
+.sw:last-child{border-right:none}
+.sw:hover{background:var(--off)}
+.sw::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:var(--blood);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .4s ease;
+}
+.sw:hover::before{transform:scaleX(1)}
+.sw-v{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(1.8rem,3vw,2.8rem);
+  line-height:1;color:var(--blood);
+  margin-bottom:.4rem;letter-spacing:.03em;
+}
+.sw-l{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--grey);line-height:1.4;
+}
+
+/* ══ CAUSE CARDS — FORENSIC STYLE ══ */
+.causes-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:0;
+  border:1px solid rgba(0,0,0,.12);
+}
+.cause{
+  padding:2.5rem;
+  border-right:1px solid rgba(0,0,0,.08);
+  border-bottom:1px solid rgba(0,0,0,.08);
+  position:relative;overflow:hidden;
+  background:var(--white);
+  transition:background .25s,box-shadow .25s;
+}
+.cause:hover{
+  background:var(--off);
+  box-shadow:inset 4px 0 0 var(--blood);
+}
+.cause-tag-top{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--blood);border:1px solid var(--blood);
+  padding:.2rem .6rem;margin-bottom:1.2rem;
+  background:rgba(139,0,0,.04);
+}
+.cause-num-bg{
+  position:absolute;top:1.5rem;right:1.5rem;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:5rem;color:rgba(0,0,0,.04);
+  line-height:1;pointer-events:none;user-select:none;
+}
+.cause-ico{font-size:1.6rem;margin-bottom:.8rem;display:block}
+.cause-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.6rem;line-height:1.05;letter-spacing:.02em;
+  color:var(--ink);margin-bottom:.5rem;
+}
+.cause-pct-row{
+  display:flex;align-items:center;gap:.75rem;
+  margin-bottom:1rem;
+}
+.cause-pct-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;font-weight:700;color:var(--blood);
+  white-space:nowrap;
+}
+.pbar{
+  flex:1;height:3px;background:rgba(0,0,0,.07);overflow:hidden;
+}
+.pbar-fill{
+  height:100%;width:0;background:var(--blood);
+  transition:width 1.6s cubic-bezier(.4,0,.2,1);
+}
+.cause-body{
+  font-size:.92rem;color:var(--grey);line-height:1.7;
+  margin-bottom:1rem;
+}
+.cause-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.ctag{
+  font-family:'JetBrains Mono',monospace;font-size:.52rem;
+  letter-spacing:.07em;text-transform:uppercase;
+  border:1px solid rgba(0,0,0,.12);color:var(--grey);
+  padding:.15rem .45rem;
+}
+
+/* ══ QUOTE / TESTIMONY ══ */
+.testimony{
+  padding:5rem 6rem;
+  background:var(--blood);
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.testimony::before{
+  content:'"';
+  font-family:'Bebas Neue',sans-serif;
+  font-size:30rem;line-height:.8;
+  color:rgba(255,255,255,.04);
+  position:absolute;top:-3rem;left:50%;
+  transform:translateX(-50%);
+  pointer-events:none;user-select:none;
+}
+.t-text{
+  font-family:'Crimson Pro',serif;
+  font-size:clamp(1.2rem,2.5vw,1.75rem);
+  font-style:italic;
+  color:rgba(255,255,255,.88);
+  line-height:1.7;
+  max-width:750px;margin:0 auto 1.5rem;
+  position:relative;z-index:1;
+}
+.t-attr{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+  position:relative;z-index:1;
+}
+
+/* ══ MALNUTRITION HERO ══ */
+.mal-hero{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  border:1px solid rgba(0,0,0,.12);
+  margin-bottom:3rem;
+  overflow:hidden;
+}
+.mal-hero-left{
+  padding:3rem;
+  background:var(--blood);
+  position:relative;
+}
+.mal-hero-left::after{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  opacity:.5;pointer-events:none;
+}
+.mal-big-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,8vw,7rem);
+  line-height:1;color:#fff;
+  letter-spacing:.02em;
+  text-shadow:0 4px 30px rgba(0,0,0,.3);
+  margin-bottom:.5rem;
+}
+.mal-big-lbl{
+  font-size:1.05rem;font-style:italic;
+  color:rgba(255,255,255,.7);line-height:1.6;
+  max-width:380px;
+}
+.mal-hero-right{
+  padding:2.5rem;
+  background:var(--off);
+}
+.mal-stat-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.8rem 1rem;
+  border-bottom:1px solid rgba(0,0,0,.07);
+  transition:background .2s;
+}
+.mal-stat-row:last-child{border-bottom:none}
+.mal-stat-row:hover{background:var(--white)}
+.mal-stat-lbl{font-size:.82rem;color:var(--grey)}
+.mal-stat-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;font-weight:700;color:var(--blood);
+}
+.ipc-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--blood);color:#fff;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.25rem .7rem;
+  animation:pulseBadge 2s ease-in-out infinite;
+}
+@keyframes pulseBadge{
+  0%,100%{box-shadow:0 0 0 0 rgba(139,0,0,.4)}
+  50%{box-shadow:0 0 0 6px rgba(139,0,0,0)}
+}
+
+/* ══ MALNUTRITION TYPE CARDS ══ */
+.mtype-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1px;
+  background:rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.08);
+  margin-bottom:3rem;
+  overflow:hidden;
+}
+.mt{
+  background:var(--white);
+  padding:2.5rem;
+  position:relative;overflow:hidden;
+  transition:background .25s;
+}
+.mt:hover{background:var(--off)}
+.mt-stripe{
+  position:absolute;top:0;left:0;right:0;height:5px;
+}
+.mt.acute .mt-stripe{background:linear-gradient(90deg,#7f0000,#c0392b)}
+.mt.wasting .mt-stripe{background:linear-gradient(90deg,#bf360c,#e64a19)}
+.mt.stunting .mt-stripe{background:linear-gradient(90deg,#8b6914,#c9a227)}
+.mt.micro .mt-stripe{background:linear-gradient(90deg,#1a237e,#3949ab)}
+.mt.anemia .mt-stripe{background:linear-gradient(90deg,#4a148c,#7b1fa2)}
+
+.mt-icon{font-size:1.6rem;margin-bottom:.8rem;display:block}
+.mt-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.5rem;line-height:1;letter-spacing:.02em;
+  color:var(--ink);margin-bottom:.3rem;
+}
+.mt-affected{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.63rem;font-weight:700;
+  margin-bottom:.8rem;
+}
+.mt.acute .mt-affected{color:#c0392b}
+.mt.wasting .mt-affected{color:#e64a19}
+.mt.stunting .mt-affected{color:#c9a227}
+.mt.micro .mt-affected{color:#3949ab}
+.mt.anemia .mt-affected{color:#7b1fa2}
+
+.mt-bar{height:3px;background:rgba(0,0,0,.07);margin-bottom:1rem;overflow:hidden}
+.mt-bar-fill{height:100%;width:0;transition:width 1.6s cubic-bezier(.34,1.2,.64,1)}
+.mt.acute .mt-bar-fill{background:linear-gradient(90deg,#7f0000,#c0392b)}
+.mt.wasting .mt-bar-fill{background:linear-gradient(90deg,#bf360c,#e64a19)}
+.mt.stunting .mt-bar-fill{background:linear-gradient(90deg,#8b6914,#c9a227)}
+.mt.micro .mt-bar-fill{background:linear-gradient(90deg,#1a237e,#3949ab)}
+.mt.anemia .mt-bar-fill{background:linear-gradient(90deg,#4a148c,#7b1fa2)}
+
+.mt-desc{font-size:.9rem;color:var(--grey);line-height:1.7;margin-bottom:.85rem}
+.mt-symptoms{display:flex;flex-wrap:wrap;gap:.3rem}
+.mt-sym{
+  font-family:'JetBrains Mono',monospace;font-size:.52rem;
+  letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid rgba(0,0,0,.1);color:var(--grey);
+  padding:.15rem .45rem;background:var(--off);
+}
+
+/* ══ CAUSES OF MALNUTRITION ══ */
+.malcause-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;
+  background:rgba(0,0,0,.07);border:1px solid rgba(0,0,0,.07);
+  overflow:hidden;margin-bottom:3rem;
+}
+.malcause{
+  padding:2rem;background:var(--white);
+  border-right:none;
+  transition:background .2s,box-shadow .2s;
+}
+.malcause:hover{background:var(--off);box-shadow:inset 0 -3px 0 var(--blood)}
+.malcause-ico{font-size:1.8rem;margin-bottom:.75rem;display:block}
+.malcause-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:.02em;
+  color:var(--ink);margin-bottom:.5rem;
+}
+.malcause-text{font-size:.82rem;color:var(--grey);line-height:1.65}
+
+/* ══ TIMELINE ══ */
+.tl{position:relative;padding-left:2.5rem;margin-bottom:3rem}
+.tl::before{
+  content:'';position:absolute;left:.5rem;top:0;bottom:0;
+  width:2px;background:linear-gradient(to bottom,var(--blood),rgba(139,0,0,.1));
+}
+.tl-item{
+  position:relative;padding:0 0 2.5rem 2rem;
+}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{
+  position:absolute;left:-1.9rem;top:.3rem;
+  width:.75rem;height:.75rem;
+  background:var(--blood);
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+}
+.tl-stage{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--blood);margin-bottom:.3rem;
+}
+.tl-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.2rem;letter-spacing:.02em;
+  color:var(--ink);margin-bottom:.4rem;
+}
+.tl-text{font-size:.88rem;color:var(--grey);line-height:1.7}
+
+/* ══ RESILIENCE ══ */
+.res-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;
+  background:rgba(0,0,0,.07);border:1px solid rgba(0,0,0,.07);
+  overflow:hidden;
+}
+.res-card{
+  padding:2.5rem;background:var(--white);
+  transition:background .2s;
+  position:relative;
+}
+.res-card:hover{background:var(--off)}
+.res-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,rgba(93,138,110,.6),rgba(74,144,184,.4),transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .4s;
+}
+.res-card:hover::after{transform:scaleX(1)}
+.res-ico{font-size:1.6rem;margin-bottom:.75rem;display:block}
+.res-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:.02em;
+  color:#2d6a4a;margin-bottom:.5rem;
+}
+.res-text{font-size:.85rem;color:var(--grey);line-height:1.65}
+
+/* ══ PRACTICES ══ */
+.prac-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:1px;background:rgba(0,0,0,.07);border:1px solid rgba(0,0,0,.07);
+  overflow:hidden;
+}
+.prac-card{
+  padding:2.5rem;background:var(--white);
+  transition:background .2s;
+}
+.prac-card:hover{background:var(--off)}
+.prac-label{
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--blood);
+  margin-bottom:.5rem;
+}
+.prac-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.25rem;letter-spacing:.02em;
+  color:var(--ink);margin-bottom:.2rem;
+}
+.prac-sub{font-style:italic;font-size:.8rem;color:var(--grey);margin-bottom:.9rem}
+.prac-steps{list-style:none}
+.prac-steps li{
+  font-size:.85rem;color:var(--grey);line-height:1.65;
+  padding:.25rem 0 .25rem 1.2rem;
+  border-bottom:1px solid rgba(0,0,0,.05);
+  position:relative;
+}
+.prac-steps li:last-child{border-bottom:none}
+.prac-steps li::before{
+  content:'—';position:absolute;left:0;
+  color:var(--blood);font-size:.7rem;top:.4rem;
+}
+
+/* ══ ACTION CARDS ══ */
+.act-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:1px;background:rgba(0,0,0,.07);border:1px solid rgba(0,0,0,.07);
+  overflow:hidden;
+}
+.act-card{
+  padding:2.5rem;background:var(--white);
+  display:flex;flex-direction:column;gap:.6rem;
+  transition:background .2s;
+}
+.act-card:hover{background:var(--off)}
+.act-ico{font-size:1.6rem}
+.act-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.2rem;
+  letter-spacing:.02em;color:var(--ink);
+}
+.act-text{font-size:.85rem;color:var(--grey);line-height:1.6;flex:1}
+.act-link{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--white);background:var(--blood);
+  text-decoration:none;
+  padding:.4rem .9rem;
+  border:1px solid var(--blood);
+  align-self:flex-start;
+  transition:background .18s,color .18s;
+}
+.act-link:hover{background:var(--white);color:var(--blood)}
+
+/* ══ RUTF BOX ══ */
+.rutf-box{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1px solid rgba(0,0,0,.1);overflow:hidden;
+  margin-top:3rem;
+}
+.rutf-left{
+  padding:2.5rem;background:var(--off);
+  border-right:1px solid rgba(0,0,0,.07);
+}
+.rutf-right{
+  padding:2.5rem;background:var(--white);
+  display:flex;flex-direction:column;gap:1rem;justify-content:center;
+}
+.rutf-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;letter-spacing:.02em;
+  color:var(--ink);margin-bottom:.5rem;
+}
+.rutf-text{font-size:.9rem;color:var(--grey);line-height:1.7}
+.rutf-stat{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.7rem 0;border-bottom:1px solid rgba(0,0,0,.06);
+}
+.rutf-stat:last-child{border-bottom:none}
+.rutf-stat-l{font-size:.82rem;color:var(--grey)}
+.rutf-stat-v{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.82rem;font-weight:700;color:var(--blood);
+}
+
+/* ══ FOOTER ══ */
+.footer{
+  background:var(--ink);
+  padding:3.5rem 6rem;
+  position:relative;overflow:hidden;
+}
+.footer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:var(--blood);
+}
+.foot-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;letter-spacing:.1em;
+  color:rgba(255,255,255,.15);margin-bottom:1rem;
+}
+.foot-text{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;letter-spacing:.05em;
+  color:rgba(255,255,255,.2);line-height:2;
+}
+
+/* ══ REVEAL ══ */
+.rev{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.rev.in{opacity:1;transform:translateY(0)}
+.rev-l{opacity:0;transform:translateX(-28px);transition:opacity .65s ease,transform .65s ease}
+.rev-l.in{opacity:1;transform:translateX(0)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:900px){
+  .hero,.section{padding-left:2rem;padding-right:2rem}
+  .hero{padding-top:4rem}
+  .mal-hero,.rutf-box{grid-template-columns:1fr}
+  .statwall{grid-template-columns:repeat(3,1fr)}
+  .testimony{padding:3rem 2rem}
+  .footer{padding:3rem 2rem}
+  .hero-nums{flex-wrap:wrap}
+  .hero-num{flex:1 1 45%}
+}
+@media(max-width:580px){
+  .causes-grid,.mtype-grid,.malcause-grid,.res-grid,.prac-grid,.act-grid{grid-template-columns:1fr}
+  .statwall{grid-template-columns:repeat(2,1fr)}
+  .hero-title{font-size:3.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Blood canvas -->
+<canvas id="bloodCanvas"></canvas>
+
+<div class="content">
+
+<!-- ══ TICKER ══ -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="tick-item"><strong>21,289+</strong> children killed <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>44,500+</strong> children injured <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>320,000+</strong> at risk of acute malnutrition <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>1.1M+</strong> displaced children <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>625,000+</strong> children lost education <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>1M+</strong> need mental health support <span class="tick-sep">|</span></span>
+    <span class="tick-item">SOURCE: UNICEF · OCHA · WHO · MARCH 2026 <span class="tick-sep">|</span></span>
+    <!-- duplicate -->
+    <span class="tick-item"><strong>21,289+</strong> children killed <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>44,500+</strong> children injured <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>320,000+</strong> at risk of acute malnutrition <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>1.1M+</strong> displaced children <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>625,000+</strong> children lost education <span class="tick-sep">|</span></span>
+    <span class="tick-item"><strong>1M+</strong> need mental health support <span class="tick-sep">|</span></span>
+    <span class="tick-item">SOURCE: UNICEF · OCHA · WHO · MARCH 2026 <span class="tick-sep">|</span></span>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-date">March 2026 — Verified Humanitarian Data</div>
+  <div class="hero-label">UNICEF · OCHA · WHO · WFP · The Record</div>
+  <h1 class="hero-title">
+    CHILDREN<br>
+    OF <span class="blood-word">GAZA</span><br>
+    THE RECORD
+  </h1>
+  <p class="hero-sub">Behind every number is a name, a face, a future that was taken. This is not a report. This is a reckoning.</p>
+  <div class="hero-nums">
+    <div class="hero-num">
+      <div class="hn-val" data-target="21289" data-suffix="+">0</div>
+      <div class="hn-lbl">Children Killed</div>
+    </div>
+    <div class="hero-num">
+      <div class="hn-val" data-target="44500" data-suffix="+">0</div>
+      <div class="hn-lbl">Injured</div>
+    </div>
+    <div class="hero-num">
+      <div class="hn-val" data-target="320000" data-suffix="+">0</div>
+      <div class="hn-lbl">Malnutrition Risk</div>
+    </div>
+    <div class="hero-num">
+      <div class="hn-val">1M+</div>
+      <div class="hn-lbl">Need MHPSS</div>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll to witness</div>
+</section>
+
+<div class="hr-blood"></div>
+
+<!-- ══ STAT WALL ══ -->
+<div style="padding:3rem 6rem 0;background:var(--white)" class="rev">
+  <div class="statwall">
+    <div class="sw"><div class="sw-v" data-target="21289" data-suffix="+">0</div><div class="sw-l">Children Killed</div></div>
+    <div class="sw"><div class="sw-v" data-target="44500" data-suffix="+">0</div><div class="sw-l">Children Injured</div></div>
+    <div class="sw"><div class="sw-v" data-target="320000" data-suffix="+">0</div><div class="sw-l">Malnutrition Risk</div></div>
+    <div class="sw"><div class="sw-v">1M+</div><div class="sw-l">Need MHPSS</div></div>
+    <div class="sw"><div class="sw-v">1.1M+</div><div class="sw-l">Displaced</div></div>
+    <div class="sw"><div class="sw-v" data-target="625000" data-suffix="+">0</div><div class="sw-l">Lost Education</div></div>
+  </div>
+</div>
+
+<div class="hr" style="margin:3rem 6rem 0"></div>
+
+<!-- ══ CAUSES OF DEATH ══ -->
+<section class="section">
+  <div class="rev">
+    <div class="s-eyebrow">How They Died</div>
+    <h2 class="s-title">THE CAUSES THAT<br><em>TOOK THEIR LIVES</em></h2>
+    <p class="s-desc">Verified causes drawn from UNICEF, WHO, and OCHA humanitarian reports. Each entry represents thousands of individual tragedies, each preventable under different circumstances.</p>
+  </div>
+
+  <div class="causes-grid">
+    <div class="cause rev" style="--d:.05s">
+      <div class="cause-num-bg">01</div>
+      <div class="cause-tag-top">💥 Primary Cause</div>
+      <div class="cause-ico">💥</div>
+      <div class="cause-title">Airstrikes & Explosive Weapons</div>
+      <div class="cause-pct-row">
+        <span class="cause-pct-num">~70% of documented child deaths</span>
+        <div class="pbar"><div class="pbar-fill" data-w="70"></div></div>
+      </div>
+      <div class="cause-body">The primary cause of child death. Aerial bombardment and artillery cause massive blast trauma, crush injuries from collapsed buildings, and shrapnel wounds to bodies too small to survive them. Many children remain under rubble, unreachable for days. The majority of verified deaths fall under this category — and experts believe the true figure is significantly higher.</div>
+      <div class="cause-tags"><span class="ctag">Blast Trauma</span><span class="ctag">Crush Injuries</span><span class="ctag">Burns</span><span class="ctag">Shrapnel</span></div>
+    </div>
+
+    <div class="cause rev" style="--d:.10s">
+      <div class="cause-num-bg">02</div>
+      <div class="cause-tag-top">🏥 Medical Collapse</div>
+      <div class="cause-ico">🏥</div>
+      <div class="cause-title">Collapse of Medical Care</div>
+      <div class="cause-pct-row">
+        <span class="cause-pct-num">Widespread preventable deaths</span>
+        <div class="pbar"><div class="pbar-fill" data-w="55"></div></div>
+      </div>
+      <div class="cause-body">With over 50% of hospitals non-functional, children die from entirely treatable conditions. Premature newborns die when incubators lose power. Children with cancer lose chemotherapy access. Diabetic children run out of insulin. Surgeons operate by phone torchlight. A system built to heal has been systematically dismantled.</div>
+      <div class="cause-tags"><span class="ctag">Preventable</span><span class="ctag">Treatable Conditions</span><span class="ctag">No Power</span></div>
+    </div>
+
+    <div class="cause rev" style="--d:.15s">
+      <div class="cause-num-bg">03</div>
+      <div class="cause-tag-top">💧 Water Crisis</div>
+      <div class="cause-ico">💧</div>
+      <div class="cause-title">Dehydration & Contaminated Water</div>
+      <div class="cause-pct-row">
+        <span class="cause-pct-num">Critical — especially under-5s</span>
+        <div class="pbar"><div class="pbar-fill" data-w="45"></div></div>
+      </div>
+      <div class="cause-body">Destroyed water infrastructure forces families to rely on contaminated sources. Infants and children under 5 are biologically the most vulnerable. Severe dehydration combined with diarrheal disease becomes fatal within days without oral rehydration salts or IV fluids — neither of which are reliably available. Children die of thirst while surrounded by a sea.</div>
+      <div class="cause-tags"><span class="ctag">Diarrhoeal Disease</span><span class="ctag">Dehydration</span><span class="ctag">Sepsis</span></div>
+    </div>
+
+    <div class="cause rev" style="--d:.20s">
+      <div class="cause-num-bg">04</div>
+      <div class="cause-tag-top">🍽️ Famine</div>
+      <div class="cause-ico">🍽️</div>
+      <div class="cause-title">Starvation & Severe Malnutrition</div>
+      <div class="cause-pct-row">
+        <span class="cause-pct-num">Rising rapidly — IPC Phase 5 confirmed</span>
+        <div class="pbar"><div class="pbar-fill" data-w="40"></div></div>
+      </div>
+      <div class="cause-body">Children under 5 with Severe Acute Malnutrition face a 9× higher risk of death. Without therapeutic food, they deteriorate within weeks. IPC Phase 5 Famine conditions were declared in Northern Gaza — the highest emergency classification in the global hunger scale. Starving children die from infections that a healthy body would easily overcome.</div>
+      <div class="cause-tags"><span class="ctag">SAM</span><span class="ctag">IPC Phase 5 Famine</span><span class="ctag">Immune Collapse</span></div>
+    </div>
+
+    <div class="cause rev" style="--d:.25s">
+      <div class="cause-num-bg">05</div>
+      <div class="cause-tag-top">🦠 Infectious Disease</div>
+      <div class="cause-ico">🦠</div>
+      <div class="cause-title">Preventable Infectious Disease</div>
+      <div class="cause-pct-row">
+        <span class="cause-pct-num">Accelerating in displacement camps</span>
+        <div class="pbar"><div class="pbar-fill" data-w="35"></div></div>
+      </div>
+      <div class="cause-body">Overcrowded displacement shelters with no sanitation are outbreak conditions. Hepatitis A, cholera, meningitis, and measles — diseases previously eliminated — are resurging. Malnourished children cannot mount an immune response. Vaccination campaigns have been disrupted. Every infection becomes potentially fatal in a body already compromised by hunger.</div>
+      <div class="cause-tags"><span class="ctag">Cholera</span><span class="ctag">Measles</span><span class="ctag">Hepatitis A</span><span class="ctag">Respiratory</span></div>
+    </div>
+
+    <div class="cause rev" style="--d:.30s">
+      <div class="cause-num-bg">06</div>
+      <div class="cause-tag-top">🤱 Neonatal</div>
+      <div class="cause-ico">🤱</div>
+      <div class="cause-title">Neonatal & Infant Mortality</div>
+      <div class="cause-pct-row">
+        <span class="cause-pct-num">Newborn deaths rising sharply</span>
+        <div class="pbar"><div class="pbar-fill" data-w="30"></div></div>
+      </div>
+      <div class="cause-body">Pregnant women are giving birth without medical staff, anaesthesia, or sterile conditions. Premature newborns requiring incubators, oxygen, and IV nutrition die within hours of birth. Maternal malnutrition causes low birth weight. Neonatal sepsis without antibiotics is almost uniformly fatal. Some babies never take a breath in a world willing to fight for them.</div>
+      <div class="cause-tags"><span class="ctag">Premature Birth</span><span class="ctag">Neonatal Sepsis</span><span class="ctag">No Medical Care</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TESTIMONY ══ -->
+<div class="testimony rev">
+  <p class="t-text">"In Gaza today, children are not dying from complex, untreatable diseases. They are dying from hunger that can be stopped, from thirst that can be quenched, from wounds that can be treated — if only they could be reached."</p>
+  <div class="t-attr">— UNICEF Executive Director · 2025 Humanitarian Appeal</div>
+</div>
+
+<!-- ══ MALNUTRITION DEEP DIVE ══ -->
+<section class="section section-alt">
+  <div class="rev">
+    <div class="s-eyebrow">Malnutrition Crisis — In Detail</div>
+    <h2 class="s-title">WHAT HUNGER DOES<br>TO A <em>CHILD'S BODY</em></h2>
+    <p class="s-desc">Gaza is experiencing one of the fastest-developing malnutrition emergencies ever recorded. These are not abstract statistics — they are children whose bodies are failing them right now.</p>
+  </div>
+
+  <div class="mal-hero rev">
+    <div class="mal-hero-left">
+      <div class="mal-big-num" data-target="320000" data-suffix="+">0</div>
+      <div class="mal-big-lbl">Children are at risk of acute malnutrition — the highest figure ever recorded for Gaza. In Northern Gaza, IPC Phase 5 Famine conditions have been confirmed by international food security assessors. The crisis is accelerating faster than aid can reach those affected.</div>
+    </div>
+    <div class="mal-hero-right">
+      <div class="mal-stat-row"><span class="mal-stat-lbl">Children with Severe Acute Malnutrition (SAM)</span><span class="mal-stat-val">~30,000+</span></div>
+      <div class="mal-stat-row"><span class="mal-stat-lbl">Children with Moderate Acute Malnutrition (MAM)</span><span class="mal-stat-val">~65,000+</span></div>
+      <div class="mal-stat-row"><span class="mal-stat-lbl">Under-2s at acute risk</span><span class="mal-stat-val">~17,000+</span></div>
+      <div class="mal-stat-row"><span class="mal-stat-lbl">Pregnant & lactating women affected</span><span class="mal-stat-val">~50,000+</span></div>
+      <div class="mal-stat-row"><span class="mal-stat-lbl">IPC Phase — Northern Gaza</span><span class="mal-stat-val"><span class="ipc-badge">⚠ PHASE 5 — FAMINE</span></span></div>
+    </div>
+  </div>
+
+  <div class="mtype-grid">
+    <div class="mt acute rev" style="--d:.05s">
+      <div class="mt-stripe"></div>
+      <div class="mt-icon">🆘</div>
+      <div class="mt-title">Severe Acute Malnutrition (SAM)</div>
+      <div class="mt-affected">~30,000+ children · 30× higher mortality risk</div>
+      <div class="mt-bar"><div class="mt-bar-fill" data-w="95"></div></div>
+      <div class="mt-desc">The most life-threatening form. A child with SAM has a weight-for-height ratio so low that vital organs begin to fail. The immune system collapses entirely — any infection, even a common cold, becomes fatal. Without Ready-to-Use Therapeutic Food (RUTF) and medical treatment, up to 30% of SAM children die. In Gaza, RUTF stocks are critically depleted and aid blockades prevent resupply.</div>
+      <div class="mt-symptoms"><span class="mt-sym">Muscle wasting</span><span class="mt-sym">Organ failure</span><span class="mt-sym">Immune collapse</span><span class="mt-sym">Oedema</span><span class="mt-sym">Marasmus</span><span class="mt-sym">Kwashiorkor</span></div>
+    </div>
+
+    <div class="mt wasting rev" style="--d:.10s">
+      <div class="mt-stripe"></div>
+      <div class="mt-icon">⚠️</div>
+      <div class="mt-title">Global Acute Malnutrition & Wasting</div>
+      <div class="mt-affected">~65,000+ children · Rapid deterioration</div>
+      <div class="mt-bar"><div class="mt-bar-fill" data-w="75"></div></div>
+      <div class="mt-desc">Wasting occurs when a child's weight drops dangerously low relative to height — visible as loose skin, prominent ribs, sunken eyes. Without intervention, children with moderate wasting deteriorate to SAM within weeks. The body begins consuming its own muscle mass for energy. Children become too weak to cry, move, or feed themselves.</div>
+      <div class="mt-symptoms"><span class="mt-sym">Weight loss</span><span class="mt-sym">Muscle loss</span><span class="mt-sym">Extreme fatigue</span><span class="mt-sym">Apathy</span><span class="mt-sym">Weakness</span></div>
+    </div>
+
+    <div class="mt stunting rev" style="--d:.15s">
+      <div class="mt-stripe"></div>
+      <div class="mt-icon">📉</div>
+      <div class="mt-title">Chronic Stunting</div>
+      <div class="mt-affected">Long-term — permanent developmental damage</div>
+      <div class="mt-bar"><div class="mt-bar-fill" data-w="60"></div></div>
+      <div class="mt-desc">Stunting results from prolonged chronic malnutrition, especially in the first 1,000 days of life. It causes irreversible impairment to physical growth and cognitive development. Stunted children have lower brain volume, reduced IQ, compromised learning capacity, and increased risk of chronic disease in adulthood. It cannot be reversed — only prevented. Gaza's children are losing their futures in measurable, permanent ways.</div>
+      <div class="mt-symptoms"><span class="mt-sym">Impaired growth</span><span class="mt-sym">Cognitive delay</span><span class="mt-sym">Brain development</span><span class="mt-sym">Irreversible</span></div>
+    </div>
+
+    <div class="mt micro rev" style="--d:.20s">
+      <div class="mt-stripe"></div>
+      <div class="mt-icon">🧬</div>
+      <div class="mt-title">Micronutrient Deficiencies</div>
+      <div class="mt-affected">Widespread — "Hidden Hunger"</div>
+      <div class="mt-bar"><div class="mt-bar-fill" data-w="80"></div></div>
+      <div class="mt-desc">Severe shortages of Vitamin A, Zinc, Iodine, and Vitamin C are creating a "hidden hunger" crisis. Vitamin A deficiency causes preventable blindness and dramatically increases mortality from measles and diarrhoea. Scurvy — Vitamin C deficiency, eliminated from the developed world — is re-emerging for the first time in generations. Iodine deficiency permanently impairs brain development in young children.</div>
+      <div class="mt-symptoms"><span class="mt-sym">Vitamin A deficiency</span><span class="mt-sym">Night blindness</span><span class="mt-sym">Scurvy</span><span class="mt-sym">Zinc deficiency</span><span class="mt-sym">Rickets</span></div>
+    </div>
+
+    <div class="mt anemia rev" style="--d:.25s">
+      <div class="mt-stripe"></div>
+      <div class="mt-icon">🩸</div>
+      <div class="mt-title">Iron-Deficiency Anaemia</div>
+      <div class="mt-affected">Near-universal in young children & pregnant women</div>
+      <div class="mt-bar"><div class="mt-bar-fill" data-w="70"></div></div>
+      <div class="mt-desc">Anaemia is reaching near-universal levels. In infants, severe anaemia causes heart failure. In older children, it causes profound fatigue, impaired cognitive function, and inability to concentrate or learn. In pregnant women, anaemia dramatically increases the risk of maternal death, premature birth, and low birth weight — perpetuating the cycle into the next generation before it even begins.</div>
+      <div class="mt-symptoms"><span class="mt-sym">Heart failure</span><span class="mt-sym">Cognitive impairment</span><span class="mt-sym">Fatigue</span><span class="mt-sym">Pallor</span><span class="mt-sym">Maternal risk</span></div>
+    </div>
+  </div>
+
+  <!-- Root causes -->
+  <div style="margin-top:3rem" class="rev">
+    <div class="s-eyebrow">Root Causes</div>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--ink);letter-spacing:.02em;margin-bottom:.5rem">WHY CHILDREN ARE <em style="color:var(--blood)">STARVING</em></h3>
+    <p style="font-style:italic;color:var(--grey);font-size:.95rem;margin-bottom:2rem">The malnutrition crisis in Gaza is not a natural disaster. It has identifiable, documented causes.</p>
+  </div>
+
+  <div class="malcause-grid">
+    <div class="malcause rev" style="--d:.05s"><span class="malcause-ico">🚫</span><div class="malcause-title">Aid Blockade</div><div class="malcause-text">Severe restrictions on humanitarian access have reduced food, medicine, and nutrition supplies to a fraction of what is needed. Aid convoys face systematic delays, denials, and attacks.</div></div>
+    <div class="malcause rev" style="--d:.10s"><span class="malcause-ico">💸</span><div class="malcause-title">Economic Collapse</div><div class="malcause-text">90% of Gaza's population lives in extreme poverty. Bakeries have closed due to fuel shortages. Markets are empty. Families have no income and no food purchasing power whatsoever.</div></div>
+    <div class="malcause rev" style="--d:.15s"><span class="malcause-ico">🌾</span><div class="malcause-title">Agricultural Destruction</div><div class="malcause-text">Gaza's farmland, greenhouses, and food production infrastructure have been systematically destroyed, eliminating local food sources that once supplemented humanitarian imports.</div></div>
+    <div class="malcause rev" style="--d:.20s"><span class="malcause-ico">⚡</span><div class="malcause-title">No Power, No Refrigeration</div><div class="malcause-text">Electricity has been near-totally cut. Without power, food cannot be preserved, water cannot be desalinated, and hospitals cannot store vaccines, blood, or therapeutic nutrition supplies.</div></div>
+    <div class="malcause rev" style="--d:.25s"><span class="malcause-ico">🏕️</span><div class="malcause-title">Mass Displacement</div><div class="malcause-text">Families repeatedly displaced and living in tents have no cooking facilities, no clean water, and are entirely dependent on aid that is not reaching them in the quantities required to sustain life.</div></div>
+    <div class="malcause rev" style="--d:.30s"><span class="malcause-ico">👩‍⚕️</span><div class="malcause-title">Collapsed Health System</div><div class="malcause-text">Without functioning hospitals and nutrition specialists, children identified as malnourished cannot receive treatment even when aid organisations identify and try to reach them.</div></div>
+  </div>
+
+  <!-- Starvation timeline + RUTF -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:4rem;align-items:start">
+    <div class="rev-l">
+      <div class="s-eyebrow" style="margin-bottom:1rem">The Timeline of Starvation</div>
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--ink);margin-bottom:2rem">WHAT HUNGER DOES<br>DAY BY DAY</h3>
+      <div class="tl">
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-stage">Day 1–3 · Without Food</div><div class="tl-title">Glycogen Reserves Deplete</div><div class="tl-text">The body burns stored glucose. Children become lethargic, irritable, and unable to concentrate. Infants cry weakly. Blood sugar drops to dangerous levels.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-stage">Week 1–2 · Prolonged Starvation</div><div class="tl-title">Muscle Breakdown Begins</div><div class="tl-text">The body begins consuming muscle protein for energy. Visible wasting appears. Immune function drops sharply — any infection now becomes dangerous.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-stage">Week 3–6 · Severe Stage</div><div class="tl-title">Organ Stress & Kwashiorkor</div><div class="tl-text">Protein deficiency causes fluid retention — the swollen belly seen in severely malnourished children. The liver, kidneys, and heart begin to fail.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-stage">Month 2+ · Terminal Without Intervention</div><div class="tl-title">Multi-Organ Failure</div><div class="tl-text">Without intervention, the heart weakens, immunity collapses entirely, and death follows — often from an otherwise minor infection like diarrhoea or a simple cold.</div></div>
+      </div>
+    </div>
+
+    <div class="rev" style="--d:.1s">
+      <div class="rutf-box">
+        <div class="rutf-left">
+          <div class="rutf-title">WHAT IS RUTF?</div>
+          <div style="font-size:2.5rem;margin-bottom:.75rem">🥜</div>
+          <div class="rutf-text">Ready-to-Use Therapeutic Food is a peanut-based paste enriched with vitamins and minerals. One sachet per day for 6–8 weeks can bring a child back from the edge of death. It requires no water, no cooking, no refrigeration. It saves lives. It is not reaching Gaza in sufficient quantities due to access restrictions.</div>
+        </div>
+        <div class="rutf-right">
+          <div class="rutf-stat"><span class="rutf-stat-l">Cost to treat one child (full course)</span><span class="rutf-stat-v">~$45 USD</span></div>
+          <div class="rutf-stat"><span class="rutf-stat-l">Survival rate with treatment</span><span class="rutf-stat-v">~95%</span></div>
+          <div class="rutf-stat"><span class="rutf-stat-l">Survival rate without treatment</span><span class="rutf-stat-v" style="color:#7f0000">As low as 70%</span></div>
+          <div class="rutf-stat"><span class="rutf-stat-l">Treatment duration</span><span class="rutf-stat-v">6–8 weeks</span></div>
+          <div class="rutf-stat"><span class="rutf-stat-l">Current RUTF availability in Gaza</span><span class="rutf-stat-v" style="color:#7f0000">Critically depleted</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hr-blood"></div>
+
+<!-- ══ RESILIENCE ══ -->
+<section class="section">
+  <div class="rev">
+    <div class="s-eyebrow">Survival, Recovery & Hope</div>
+    <h2 class="s-title">CHILDREN WHO<br><em>ENDURE</em></h2>
+    <p class="s-desc">Amidst documented devastation, organisations and communities are working to keep children alive, safe, and connected to their futures.</p>
+  </div>
+  <div class="res-grid">
+    <div class="res-card rev" style="--d:.05s"><span class="res-ico">🏫</span><div class="res-title">Emergency Learning Spaces</div><div class="res-text">UNICEF and Education Cannot Wait operate temporary learning spaces and mobile schools, restoring structure, safety, and the normalcy of learning for over 200,000 displaced children.</div></div>
+    <div class="res-card rev" style="--d:.10s"><span class="res-ico">🎨</span><div class="res-title">Child-Friendly Spaces</div><div class="res-text">Supervised spaces with play, art therapy, and structured activities provide evidence-based trauma processing. Consistent routines in safe environments are essential to psychosocial recovery in crisis.</div></div>
+    <div class="res-card rev" style="--d:.15s"><span class="res-ico">🥜</span><div class="res-title">Therapeutic Feeding</div><div class="res-text">Where access permits, UNICEF and NGO partners are administering RUTF to children with SAM. Recovery rates reach 95% when treatment is reached in time — every window of access matters.</div></div>
+    <div class="res-card rev" style="--d:.20s"><span class="res-ico">💉</span><div class="res-title">Emergency Vaccination</div><div class="res-text">Mass vaccination campaigns for polio, measles, and preventable diseases are conducted in windows of access, protecting immunocompromised malnourished children from additional lethal threats.</div></div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ══ PRACTICES ══ -->
+<section class="section section-alt">
+  <div class="rev">
+    <div class="s-eyebrow">For Caregivers & Support Workers</div>
+    <h2 class="s-title">GENTLE PRACTICES<br><em>FOR CHILDREN</em></h2>
+    <p class="s-desc">Evidence-informed, equipment-free techniques used by humanitarian child psychologists in crisis settings to support emotional regulation. Guideable by any trusted adult in any safe space.</p>
+  </div>
+  <div class="prac-grid">
+    <div class="prac-card rev" style="--d:.05s">
+      <div class="prac-label">Exercise 01 · Breathing</div>
+      <div class="prac-title">Belly Breathing</div>
+      <div class="prac-sub">"Balloon Breath" — ages 4 and up</div>
+      <ul class="prac-steps">
+        <li>Sit comfortably; place both hands gently on the belly</li>
+        <li>Breathe in through nose for 4 counts — belly rises like a balloon</li>
+        <li>Hold softly for 2 counts</li>
+        <li>Breathe out through mouth for 6 counts — balloon deflates</li>
+        <li>Repeat 4–6 times. Notice the body growing calmer.</li>
+      </ul>
+    </div>
+    <div class="prac-card rev" style="--d:.10s">
+      <div class="prac-label">Exercise 02 · Breathing</div>
+      <div class="prac-title">Square Breathing</div>
+      <div class="prac-sub">"Box Breath" — ages 6 and up</div>
+      <ul class="prac-steps">
+        <li>Sit upright, hands resting on knees</li>
+        <li>Breathe in through nose for 4 counts (side 1)</li>
+        <li>Hold for 4 counts (side 2)</li>
+        <li>Breathe out through mouth for 4 counts (side 3)</li>
+        <li>Hold for 4 counts (side 4). Repeat 4 rounds.</li>
+      </ul>
+    </div>
+    <div class="prac-card rev" style="--d:.15s">
+      <div class="prac-label">Exercise 03 · Movement</div>
+      <div class="prac-title">Child's Pose</div>
+      <div class="prac-sub">"Seed Pose" — gentle yoga, all ages</div>
+      <ul class="prac-steps">
+        <li>Kneel on a comfortable surface, sit back on heels</li>
+        <li>Slowly fold upper body forward, forehead to ground</li>
+        <li>Arms rest forward or along sides — whatever feels right</li>
+        <li>Take 5–8 slow easy breaths; feel the back rise and fall</li>
+        <li>Rise slowly when ready — deeply calming for nervous system</li>
+      </ul>
+    </div>
+    <div class="prac-card rev" style="--d:.20s">
+      <div class="prac-label">Exercise 04 · Movement</div>
+      <div class="prac-title">Mountain & Star Pose</div>
+      <div class="prac-sub">Grounding & energy — all ages</div>
+      <ul class="prac-steps">
+        <li>Stand with feet hip-width apart</li>
+        <li>Feel both feet firmly and steadily on the ground</li>
+        <li>Breathe in — raise both arms wide like a star</li>
+        <li>Hold for 3 breaths — strong and steady like a mountain</li>
+        <li>Breathe out and lower arms slowly. Repeat 3 times.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="hr-blood"></div>
+
+<!-- ══ ACTION ══ -->
+<section class="section">
+  <div class="rev">
+    <div class="s-eyebrow">Take Action</div>
+    <h2 class="s-title">WHAT YOU CAN<br><em>DO TODAY</em></h2>
+    <p class="s-desc">Awareness is the beginning. Action is what saves lives. Every verified donation, every shared verified report matters to a child who has very little time left.</p>
+  </div>
+  <div class="act-grid">
+    <div class="act-card rev" style="--d:.05s"><div class="act-ico">💛</div><div class="act-title">UNICEF Gaza Emergency Fund</div><div class="act-text">Directly funds nutrition therapy, vaccines, clean water delivery, child-friendly spaces, and psychosocial support for children across Gaza.</div><a class="act-link" href="https://www.unicef.org/emergencies/children-gaza-strip" target="_blank" rel="noopener">↗ unicef.org/gaza</a></div>
+    <div class="act-card rev" style="--d:.10s"><div class="act-ico">🌐</div><div class="act-title">OCHA — Verified Reporting</div><div class="act-text">Follow and share only verified humanitarian data. OCHA publishes regular situation reports with the most accurate, independently verified figures available.</div><a class="act-link" href="https://www.ochaopt.org/" target="_blank" rel="noopener">↗ ochaopt.org</a></div>
+    <div class="act-card rev" style="--d:.15s"><div class="act-ico">📚</div><div class="act-title">Education Cannot Wait</div><div class="act-text">The UN global fund for education in emergencies — supporting the 625,000+ children in Gaza whose schooling and futures have been destroyed.</div><a class="act-link" href="https://www.educationcannotwait.org/" target="_blank" rel="noopener">↗ educationcannotwait.org</a></div>
+    <div class="act-card rev" style="--d:.20s"><div class="act-ico">🩺</div><div class="act-title">World Food Programme</div><div class="act-text">WFP leads emergency food assistance and malnutrition treatment in Gaza, including critical RUTF distribution to children with Severe Acute Malnutrition.</div><a class="act-link" href="https://www.wfp.org/emergencies/palestine-emergency" target="_blank" rel="noopener">↗ wfp.org/palestine</a></div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="foot-logo">🕊️ THE RECORD — CHILDREN OF GAZA</div>
+  <div class="foot-text">
+    All statistics sourced exclusively from UNICEF, OCHA, WHO, and WFP public reports.<br>
+    Figures represent minimum verified estimates as of March 2026 and likely undercount actual impact<br>
+    due to restricted humanitarian access and ongoing conflict conditions.<br><br>
+    Created for humanitarian awareness and data literacy purposes only.<br>
+    This page does not represent the views of any government, organisation, or political party.
+  </div>
+</footer>
+
+</div><!-- /.content -->
+
+<script>
+/* ══════════════════════════
+   BLOOD SPLATTER CANVAS
+══════════════════════════ */
+const canvas = document.getElementById('bloodCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = document.body.scrollHeight;
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = document.body.scrollHeight;
+  drawBlood();
+});
+
+function splat(cx, cy, r, opacity, drip) {
+  // Main splat
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+  grad.addColorStop(0, '#8b0000');
+  grad.addColorStop(0.5, '#a50000');
+  grad.addColorStop(1, 'transparent');
+  ctx.fillStyle = grad;
+
+  ctx.beginPath();
+  const pts = 18 + Math.floor(Math.random() * 10);
+  for (let i = 0; i < pts; i++) {
+    const angle = (i / pts) * Math.PI * 2;
+    const noise = 0.55 + Math.random() * 0.6;
+    const dx = cx + Math.cos(angle) * r * noise;
+    const dy = cy + Math.sin(angle) * r * noise * (1 + Math.random() * 0.3);
+    if (i === 0) ctx.moveTo(dx, dy);
+    else ctx.lineTo(dx, dy);
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  // Splatter drops around main
+  const drops = 4 + Math.floor(Math.random() * 6);
+  for (let i = 0; i < drops; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = r * (1.1 + Math.random() * 1.4);
+    const dr = r * (0.05 + Math.random() * 0.22);
+    const dx = cx + Math.cos(angle) * dist;
+    const dy = cy + Math.sin(angle) * dist;
+    ctx.globalAlpha = opacity * (0.3 + Math.random() * 0.5);
+    ctx.beginPath();
+    ctx.ellipse(dx, dy, dr, dr * (0.6 + Math.random() * 0.8), angle, 0, Math.PI * 2);
+    ctx.fillStyle = '#8b0000';
+    ctx.fill();
+  }
+
+  // Drip downward
+  if (drip) {
+    const dripLen = r * (0.8 + Math.random() * 2.5);
+    const dripW = r * (0.06 + Math.random() * 0.1);
+    ctx.globalAlpha = opacity * 0.7;
+    ctx.beginPath();
+    ctx.moveTo(cx - dripW, cy + r * 0.6);
+    ctx.quadraticCurveTo(cx - dripW * 2, cy + r + dripLen * 0.5, cx, cy + r + dripLen);
+    ctx.quadraticCurveTo(cx + dripW * 2, cy + r + dripLen * 0.5, cx + dripW, cy + r * 0.6);
+    ctx.closePath();
+    ctx.fillStyle = '#7f0000';
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawBlood() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const H = canvas.height;
+  const W = canvas.width;
+
+  // Scattered splats across the page
+  const splatData = [
+    { x: 0.05, y: 0.03, r: 55, o: 0.18, d: true },
+    { x: 0.92, y: 0.06, r: 40, o: 0.14, d: false },
+    { x: 0.78, y: 0.15, r: 28, o: 0.10, d: true },
+    { x: 0.12, y: 0.22, r: 20, o: 0.09, d: false },
+    { x: 0.95, y: 0.28, r: 35, o: 0.13, d: true },
+    { x: 0.03, y: 0.38, r: 45, o: 0.16, d: true },
+    { x: 0.88, y: 0.42, r: 22, o: 0.10, d: false },
+    { x: 0.50, y: 0.45, r: 18, o: 0.07, d: true },
+    { x: 0.18, y: 0.52, r: 30, o: 0.11, d: false },
+    { x: 0.97, y: 0.58, r: 50, o: 0.17, d: true },
+    { x: 0.07, y: 0.63, r: 25, o: 0.10, d: true },
+    { x: 0.72, y: 0.68, r: 38, o: 0.14, d: false },
+    { x: 0.35, y: 0.72, r: 20, o: 0.08, d: true },
+    { x: 0.92, y: 0.78, r: 42, o: 0.15, d: true },
+    { x: 0.10, y: 0.84, r: 32, o: 0.12, d: false },
+    { x: 0.60, y: 0.88, r: 24, o: 0.09, d: true },
+    { x: 0.85, y: 0.93, r: 55, o: 0.18, d: true },
+    { x: 0.22, y: 0.96, r: 30, o: 0.11, d: false },
+  ];
+
+  splatData.forEach(s => {
+    splat(s.x * W, s.y * H, s.r, s.o, s.d);
+  });
+
+  // Smear across hero title area
+  ctx.save();
+  ctx.globalAlpha = 0.06;
+  const smear = ctx.createLinearGradient(W * 0.3, H * 0.12, W * 0.7, H * 0.14);
+  smear.addColorStop(0, 'transparent');
+  smear.addColorStop(0.3, '#8b0000');
+  smear.addColorStop(0.7, '#a00000');
+  smear.addColorStop(1, 'transparent');
+  ctx.fillStyle = smear;
+  ctx.fillRect(W * 0.1, H * 0.11, W * 0.8, 6);
+  ctx.restore();
+}
+
+drawBlood();
+
+/* ══════════════════════════
+   ANIMATED COUNTERS
+══════════════════════════ */
+function animCount(el) {
+  const target = parseInt(el.dataset.target, 10);
+  const suffix = el.dataset.suffix || '';
+  const dur = 2200;
+  const t0 = performance.now();
+  const tick = now => {
+    const p = Math.min((now - t0) / dur, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(ease * target).toLocaleString() + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+const cObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    animCount(e.target);
+    cObs.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('[data-target]').forEach(el => cObs.observe(el));
+
+/* ══════════════════════════
+   BAR FILLS
+══════════════════════════ */
+const bObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.style.width = e.target.dataset.w + '%';
+    bObs.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.pbar-fill, .mt-bar-fill').forEach(el => bObs.observe(el));
+
+/* ══════════════════════════
+   SCROLL REVEAL
+══════════════════════════ */
+const rObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const d = parseFloat(getComputedStyle(e.target).getPropertyValue('--d') || '0') * 1000;
+    setTimeout(() => e.target.classList.add('in'), d);
+    rObs.unobserve(e.target);
+  });
+}, { threshold: 0.06 });
+document.querySelectorAll('.rev, .rev-l').forEach(el => rObs.observe(el));
+</script>
+</body>
+</html>
